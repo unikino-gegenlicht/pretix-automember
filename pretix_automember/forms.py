@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from pretix.base.models.memberships import MembershipType
+from pretix.base.models.customers import CustomerSSOProvider
 
 class AutomemberSettingsForm(forms.Form):
     # General Settings
@@ -14,6 +15,17 @@ class AutomemberSettingsForm(forms.Form):
         label=_("Membership"),
         required=False,
         help_text=_("What membership to assign on login")
+    )
+
+    # SSO Settings
+    limit_assignment_to_sso = forms.ChoiceField(
+        label=_("Only Assign when logging in with a Single Sign On Provider")
+    )
+
+    sso_ids = forms.MultipleChoiceField(
+        label=_("Allowed Single Sign On Providers"),
+        required=False,
+        help_text=_("What single sign providers need to be used to gain the membership")
     )
 
     # Duration Settings
@@ -39,6 +51,9 @@ class AutomemberSettingsForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['membership_id'].choices = [
             (m.id, m.name) for m in MembershipType.objects.filter(organizer=organizer)
+        ]
+        self.fields['sso_ids'].choices = [
+            (sso.id, sso.name) for sso in CustomerSSOProvider.objects.filter(organizer=organizer)
         ]
 
     def clean(self):

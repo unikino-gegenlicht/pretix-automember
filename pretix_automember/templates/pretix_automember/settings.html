@@ -18,6 +18,15 @@
             </div>
         </div>
 
+        {# Allowed Single Sign On Services #}
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{% trans "Single Sign On" %}</h3></div>
+            <div class="panel-body">
+                {% bootstrap_field form.limit_assignment_to_sso layout='horizontal' %}
+                {% bootstrap_field form.sso_ids layout='horizontal' %}
+            </div>
+        </div>
+
         {# Duration Settings Panel #}
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">{% trans "Duration" %}</h3></div>

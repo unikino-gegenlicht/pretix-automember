@@ -14,7 +14,7 @@ maintainers = [
 ]
 
 dependencies = [
-    "pretix"
+    "pretix",
 ]
 
 [project.entry-points."pretix.plugin"]
