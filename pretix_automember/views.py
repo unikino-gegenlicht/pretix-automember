@@ -23,6 +23,8 @@ class AutomemberSettingsView(OrganizerDetailViewMixin, FormView):
         kwargs['initial'] = {
             'plugin_enabled': self.request.organizer.settings.get('automember_enabled', as_type=bool),
             'membership_id': self.request.organizer.settings.get('automember_membership_id'),
+            'limit_assignment_to_sso': self.request.organizer.settings.get('automember_limit_assignment_to_sso', as_type=bool),
+            'sso_ids': self.request.organizer.settings.get('automember_sso_ids', as_type=list),
             'duration_type': self.request.organizer.settings.get('automember_duration_type', default='semester'),
             'duration_days': self.request.organizer.settings.get('automember_duration_days', as_type=int),
         }
@@ -33,6 +35,8 @@ class AutomemberSettingsView(OrganizerDetailViewMixin, FormView):
         self.request.organizer.settings.set('automember_enabled', form.cleaned_data['plugin_enabled'])
         self.request.organizer.settings.set('automember_membership_id', form.cleaned_data['membership_id'])
         self.request.organizer.settings.set('automember_duration_type', form.cleaned_data['duration_type'])
+        self.request.organizer.settings.set('automember_limit_assignment_to_sso', form.cleaned_data['limit_assignment_to_sso'])
+        self.request.organizer.settings.set('automember_sso_ids', form.cleaned_data['sso_ids'])
         
         if form.cleaned_data['duration_type'] == 'days':
             self.request.organizer.settings.set('automember_duration_days', form.cleaned_data['duration_days'])
