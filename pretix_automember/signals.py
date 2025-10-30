@@ -77,7 +77,7 @@ def customer_signed_in_handler(customer, sender, **kwargs):
 
     # Check for existing membership
     try:
-        membership = Membership.objects.get(customer=customer, membership_type=membership_type)
+        membership = Membership.objects.get(customer=customer, membership_type=membership_type, testmode=False)
         # Membership exists, check if expired
         if membership.date_end < now:
             # Extend membership
