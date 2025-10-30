@@ -18,7 +18,7 @@ class AutomemberSettingsForm(forms.Form):
     )
 
     # SSO Settings
-    limit_assignment_to_sso = forms.ChoiceField(
+    limit_assignment_to_sso = forms.BooleanField(
         label=_("Only Assign when logging in with a Single Sign On Provider")
     )
 
