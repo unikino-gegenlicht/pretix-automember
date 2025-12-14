@@ -55,7 +55,7 @@ def customer_signed_in_handler(customer: Customer, sender, **kwargs):
         logger.warning(f"Customer: {customer.provider.id}")
         if customer.provider is None:
             return
-        if customer.provider.id not in allowed_sso_providers:
+        if str(customer.provider.id) not in allowed_sso_providers:
             return
 
     # Calculate expiry date based on semester
