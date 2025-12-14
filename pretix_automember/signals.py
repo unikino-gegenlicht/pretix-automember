@@ -51,6 +51,8 @@ def customer_signed_in_handler(customer: Customer, sender, **kwargs):
     logger.warning(f"Setting: {limit_to_sso_sign_ins=}")
     if limit_to_sso_sign_ins:
         allowed_sso_providers = organizer.settings.get('automember_sso_ids', as_type=list)
+        if customer.provider is None:
+            return
         if customer.provider.id not in allowed_sso_providers:
             return
 
