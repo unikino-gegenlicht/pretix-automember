@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from pretix.control.signals import nav_organizer
 from pretix.base.signals import customer_signed_in
-from pretix.base.models import Customer
+from pretix.base.models.customers import Customer
 from pretix.base.models.memberships import Membership, MembershipType
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -26,7 +26,7 @@ def navbar_organizer_settings(sender, request, **kwargs):
     }]
 
 @receiver(customer_signed_in, dispatch_uid="pretix_automember_customer_signed_in")
-def customer_signed_in_handler(customer, sender, **kwargs):
+def customer_signed_in_handler(customer: Customer, sender, **kwargs):
     organizer = sender
     if not organizer:
         return
@@ -42,6 +42,12 @@ def customer_signed_in_handler(customer, sender, **kwargs):
         membership_type = MembershipType.objects.get(id=membership_type_id, organizer=organizer)
     except MembershipType.DoesNotExist:
         return
+    
+    limit_to_sso_sign_ins = organizer.settings.get('automember_limit_assignment_to_sso')
+    if limit_to_sso_sign_ins:
+        allowed_sso_providers = organizer.settings.get('automember_sso_ids', as_type=list)
+        if customer.provider.id not in allowed_sso_providers:
+            return
 
     # Calculate expiry date based on semester
     now = timezone.now()
